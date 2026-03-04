@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      cityService:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+  retry:
+    instances:
+      cityService:
+        max-attempts: 3
+        wait-duration: 1000
+        retry-exceptions:
+          - com.ademozalp.exception.RetryableException
+        ignore-exceptions:
+          - io.github.resilience4j.circuitbreaker.CallNotPermittedException
